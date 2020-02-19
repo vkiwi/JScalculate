@@ -20,8 +20,8 @@ const startButton = document.querySelector('.start-button');
     total = document.querySelector('.total');
     fastRange = document.querySelector('.fast-range');
     totalPriceSum = document.querySelector('.total_price__sum');
-    adapt = document.querySelector('.adapt');
-    mobileTemplates = document.querySelector('.mobileTemplates');
+
+    switcherDesign = document.querySelector('.switcher_design');
 
 
 
@@ -103,10 +103,12 @@ endButton.addEventListener('click', function() {
 
 formCalculate.addEventListener('change', handlerCallBackForm);
 
-function foonc(){
-    if (adapt.checked == false) {
-        hideElem(mobileTemplates);
+function mobileDesignBlock(){
+if (!document.getElementById("adapt").checked){
+    document.getElementById('mobileTemplates').disabled = true;
+    } else {
+        document.getElementById('mobileTemplates').disabled = false;
     }
 }
 
-foonc();
+mobileDesignBlock();

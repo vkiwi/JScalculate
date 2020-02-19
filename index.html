@@ -83,7 +83,7 @@
 				<fieldset>
 					<legend>Адаптировать сайт под смартфоны и&nbsp;планшеты?</legend>
 					<label class="switcher">
-						<input type="checkbox" class="calc-handler" name="option" id="adapt" value="adapt">
+						<input type="checkbox" class="calc-handler" name="option" id="adapt" value="adapt" onchange="mobileDesignBlock()">
 						<span class="switcher__indicator"></span>
 						<span class="checkbox-label adapt_value">Нет</span>
 					</label>
@@ -93,8 +93,8 @@
 				<fieldset>
 					<legend>Нужно ли разрабатывать дизайн сайта под мобильные устройства?</legend>
 					<label class="switcher">
-						<input type="checkbox" class="calc-handler" name="option" id="mobileTemplates" value="mobileTemplates" >
-						<span class="switcher__indicator"></span>
+						<input type="checkbox" class="calc-handler mobileTemplates2" name="option" id="mobileTemplates" value="mobileTemplates"  >
+						<span class="switcher__indicator" id="switcher_design"></span>
 						<span class="checkbox-label mobileTemplates_value">Нет</span>
 					</label>
 
