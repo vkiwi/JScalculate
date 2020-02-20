@@ -73,7 +73,7 @@
 				<fieldset>
 					<legend>Нужно ли разрабатывать дизайн сайта?</legend>
 					<label class="switcher">
-						<input type="checkbox" class="calc-handler" name="option" id="desktopTemplates" value="desktopTemplates">
+						<input type="checkbox" class="calc-handler" name="option" id="desktopTemplates" value="desktopTemplates" onchange="mobileDesignBlock()">
 						<span class="switcher__indicator"></span>
 						<span class="checkbox-label desktopTemplates_value">Нет</span>
 					</label>
@@ -93,7 +93,7 @@
 				<fieldset>
 					<legend>Нужно ли разрабатывать дизайн сайта под мобильные устройства?</legend>
 					<label class="switcher">
-						<input type="checkbox" class="calc-handler mobileTemplates2" name="option" id="mobileTemplates" value="mobileTemplates"  >
+						<input type="checkbox" class="calc-handler mobileTemplates2" name="option" id="mobileTemplates" value="mobileTemplates" onchange="mobileDesignBlock()">
 						<span class="switcher__indicator" id="switcher_design"></span>
 						<span class="checkbox-label mobileTemplates_value">Нет</span>
 					</label>
@@ -103,7 +103,7 @@
 				<fieldset>
 					<legend>Вы хотите самостоятельно менять и добавлять текст на сайте без помощи разработчика?</legend>
 					<label class="switcher">
-						<input type="checkbox" class="calc-handler" name="option" id="editable" value="editable">
+						<input type="checkbox" class="calc-handler" name="option" id="editable" value="editable" onchange="mobileDesignBlock()">
 						<span class="switcher__indicator"></span>
 						<span class="checkbox-label editable_value">Нет</span>
 					</label>
