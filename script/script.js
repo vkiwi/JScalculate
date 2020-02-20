@@ -106,6 +106,7 @@ formCalculate.addEventListener('change', handlerCallBackForm);
 function mobileDesignBlock(){
 if (!document.getElementById("adapt").checked){
     document.getElementById('mobileTemplates').disabled = true;
+    document.getElementById('mobileTemplates').checked = false;
     } else {
         document.getElementById('mobileTemplates').disabled = false;
     }
