@@ -35,6 +35,13 @@ const startButton = document.querySelector('.start-button');
     mobileTemplatesValue = document.querySelector('.mobileTemplates_value');
     editable = document.getElementById('editable');
     editableValue = document.querySelector('.editable_value');
+    calcDescription = document.querySelector('.calc-description');
+    metrikeYandex = document.getElementById('metrikeYandex');
+    analyticsGoogle = document.getElementById('analyticsGoogle');
+    sendOrder = document.getElementById('sendOrder');
+    cardHead = document.querySelector('.card-head');
+    totalPrice = document.querySelector('.total_price');
+    firstFieldSet = document.querySelector('.first-fieldset');
 
 function declOfNum(n, titles) {
     return n + ' ' + titles[n % 10 === 1 && n % 100 !== 11 ?
@@ -49,6 +56,34 @@ function hideElem(elem) {
     elem.style.display = 'none';
 }
 
+function dopOptionsString() {
+    let str = '';
+    if (metrikaYandex.checked || analyticsGoogle.checked || sendOrder.checked) {
+        str += 'Подключим';
+        if (metrikaYandex.checked) {
+            str += ' Яндекс Метрику';
+            if (analyticsGoogle.checked && sendOrder.checked) {
+                str += ', Гугл Аналитику и отправку заявок на почту'
+                return str;
+            } 
+            if (analyticsGoogle.checked || sendOrder.checked) {
+                str += ' и';
+            }
+        }
+        if (analyticsGoogle.checked) {
+            str += ' Гугл Аналитику';
+            if (sendOrder.checked) {
+                str += ' и';
+            }
+        }
+        if (sendOrder.checked) {
+            str += '  отправку заявок на почту';
+        }
+        str += '.';
+    }
+    return str;
+}
+
 function renderTextContent(total, site, maxDay, minDay) {
     totalPriceSum.textContent = total;
     typeSite.textContent = site;
@@ -57,15 +92,19 @@ function renderTextContent(total, site, maxDay, minDay) {
     rangeDeadline.max = maxDay;
     deadlineValue.textContent = declOfNum(rangeDeadline.value, DAY_STRING);
 
+    calcDescription.textContent = `Сделаем ${site} ${adapt.checked ? 'адаптированный под мобильные устройства и планшеты' : ''}. 
+    ${editable.checked ? 'Установим панель админстратора, чтобы вы могли самостоятельно менять содержание на сайте без разработчика.' : ' '} 
+    ${dopOptionsString()}`;
 }
 
-function priceCalculation(elem) {
+function priceCalculation(elem = {}) {
     let result = 0,
         index = 0,
         options = [],
         site = '',
         maxDeadlineDay = DATA.deadlineDay[index][1],
-        minDeadlineDay = DATA.deadlineDay[index][0];
+        minDeadlineDay = DATA.deadlineDay[index][0],
+        overPercent = 0;
 
     if (elem.name === 'whichSite') {
         for (const item of formCalculate.elements) {
@@ -83,8 +122,14 @@ function priceCalculation(elem) {
             minDeadlineDay = DATA.deadlineDay[index][0];
         } else if (item.classList.contains('calc-handler') && item.checked){
             options.push(item.value);
+        } else if (item.classList.contains('want-faster') && item.checked) {
+            const overDay = maxDeadlineDay - rangeDeadline.value;
+            overPercent = overDay * (DATA.deadlinePercent[index]/100);
         }
     }
+
+    result += DATA.price[index];
+
     options.forEach(function(key) {
         if (typeof(DATA[key]) === 'number'){
             if (key === 'sendOrder') {
@@ -100,8 +145,9 @@ function priceCalculation(elem) {
             }
         }
     });
-
-    result += DATA.price[index];
+   
+    console.log(result + result * overPercent);
+    result += result * overPercent;
     renderTextContent(result, site, maxDeadlineDay, minDeadlineDay);
 
 }
@@ -112,14 +158,39 @@ function handlerCallBackForm(event) {
         target.checked ? showElem(fastRange) : hideElem(fastRange);
     }
 
+    if (target.classList.contains('want-faster')) {
+        target.checked ? showElem(fastRange) : hideElem(fastRange);
+        priceCalculation(target);
+    }
+
     if (target.classList.contains('calc-handler')){
         priceCalculation(target);
     }
-};
+}
+
+function moveBackTotal() {
+    if (document.documentElement.getBoundingClientRect().bottom > document.documentElement.clientHeight + 200) {
+        totalPrice.classList.remove('totalPriceBottom');
+        firstFieldSet.after(totalPrice);
+        window.addEventListener('scroll', moveTotal);
+        window.removeEventListener('scroll', moveBackTotal);
+    }
+}
+
+function moveTotal() {
+    if (document.documentElement.getBoundingClientRect().bottom < document.documentElement.clientHeight + 200) {
+        //докрутили до конца экрана
+        totalPrice.classList.add('totalPriceBottom');
+        endButton.before(totalPrice);
+        window.removeEventListener('scroll', moveTotal);
+        window.addEventListener('scroll', moveBackTotal);
+    }
+}
 
 startButton.addEventListener('click', function() {
     showElem(mainForm);
     hideElem(firstScreen);
+    window.addEventListener('scroll', moveTotal);
 });
 
 endButton.addEventListener('click', function() {
@@ -129,12 +200,14 @@ endButton.addEventListener('click', function() {
             hideElem(elem);
         }
     }
-
+    cardHead.textContent = 'Заявка на разработку сайта.';
+    hideElem(totalPrice);
     showElem(total);
 
 });
 
 formCalculate.addEventListener('change', handlerCallBackForm);
+priceCalculation();
 
 function mobileDesignBlock(){
 if (!adapt.checked){
